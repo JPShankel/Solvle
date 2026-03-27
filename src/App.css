@@ -1,5 +1,46 @@
 .App {
-  text-align: center;
+  padding: 24px;
+}
+
+.solver {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.guesses ul,
+.solutions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.guess-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.remove-btn:hover {
+  color: #e53;
+}
+
+.add-btn {
+  margin-top: 4px;
+  padding: 6px 14px;
+  cursor: pointer;
 }
 
 .App-logo {
