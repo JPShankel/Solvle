@@ -1,8 +1,17 @@
 import { render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+function renderApp() {
+  const queryClient = new QueryClient();
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  );
+}
+
+test('renders Wordle Solver heading', () => {
+  renderApp();
+  expect(screen.getByText(/wordle solver/i)).toBeInTheDocument();
 });

@@ -10,15 +10,11 @@ function LetterTile({ letter, color }) {
   );
 }
 
-export default function WordGuess({ onChange }) {
-  const [tiles, setTiles] = useState(
-    Array.from({ length: 5 }, () => ({ letter: '', color: 'gray' }))
-  );
+export default function WordGuess({ tiles, onTilesChange }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   function handleSave(newTiles) {
-    setTiles(newTiles);
-    onChange?.(newTiles);
+    onTilesChange(newTiles);
   }
 
   return (
