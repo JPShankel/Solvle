@@ -5,7 +5,9 @@ const COLORS = ['gray', 'yellow', 'green'];
 
 export default function WordGuessDialog({ tiles, onSave, onClose }) {
   const dialogRef = useRef(null);
+  const inputRefs = useRef([]);
   const [draft, setDraft] = useState(tiles.map(t => ({ ...t })));
+  const [focusedIndex, setFocusedIndex] = useState(0);
 
   useEffect(() => {
     dialogRef.current.showModal();
@@ -18,10 +20,15 @@ export default function WordGuessDialog({ tiles, onSave, onClose }) {
   function handleKeyDown(e, index) {
     if (/^[a-zA-Z]$/.test(e.key)) {
       updateDraft(index, { letter: e.key.toUpperCase() });
+      inputRefs.current[index + 1]?.focus();
       e.preventDefault();
     }
     if (e.key === 'Backspace') {
       updateDraft(index, { letter: '' });
+      if (index > 0)
+      {
+        inputRefs.current[index-1]?.focus();
+      }
       e.preventDefault();
     }
   }
@@ -42,14 +49,16 @@ export default function WordGuessDialog({ tiles, onSave, onClose }) {
       <h3>Edit Guess</h3>
       <div className="dialog-tiles">
         {draft.map((tile, i) => (
-          <div key={i} className="dialog-tile">
+          <div key={i} className={`dialog-tile ${focusedIndex === i ? 'focused' : ''}`}>
             <div className={`dialog-letter ${tile.color}`} onClick={() => cycleColor(i)}>
               <input
+                ref={el => inputRefs.current[i] = el}
                 maxLength={1}
                 value={tile.letter}
                 onKeyDown={e => handleKeyDown(e, i)}
                 onChange={() => {}}
                 onClick={e => e.stopPropagation()}
+                onFocus={() => setFocusedIndex(i)}
                 autoFocus={i === 0}
               />
             </div>

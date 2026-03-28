@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { useWordBank } from './WordBankContext';
 import WordGuess from './WordGuess';
@@ -8,7 +8,7 @@ const EMPTY_TILES = () => Array.from({ length: 5 }, () => ({ letter: '', color: 
 
 function App() {
   const wordBank = useWordBank();
-  const [guesses, setGuesses] = useState([{ id: 0, tiles: EMPTY_TILES() }]);
+  const [guesses, setGuesses] = useState([]);
   const [nextId, setNextId] = useState(1);
   const [solutions, setSolutions] = useState([]);
 
@@ -36,6 +36,12 @@ function App() {
     setSolutions(results);
   }
 
+  useEffect(()=>
+  {
+    filterSolutions();
+  }
+  ,[guesses]);
+
   const handleSolutionClick = (e) =>
   {
     const {value} = e.target;
@@ -53,25 +59,30 @@ function App() {
         <div className="guesses">
           <h2>Guesses</h2>
           <ul>
-            {guesses.map(g => (
-              <li key={g.id} className="guess-row">
-                <WordGuess tiles={g.tiles} onTilesChange={newTiles => updateTiles(g.id, newTiles)} />
-                <button className="remove-btn" onClick={() => removeGuess(g.id)}>✕</button>
-              </li>
-            ))}
+            {guesses.length === 0
+              ? <li className="empty-guesses">Click <strong>+ Add Guess</strong> to get started</li>
+              : guesses.map(g => (
+                  <li key={g.id} className="guess-row">
+                    <WordGuess tiles={g.tiles} onTilesChange={newTiles => updateTiles(g.id, newTiles)} showDialog={true} />
+                    <button className="remove-btn" onClick={() => removeGuess(g.id)}>✕</button>
+                  </li>
+                ))
+            }
           </ul>
           <div className="guess-actions">
             <button className="add-btn" onClick={addGuess}>+ Add Guess</button>
-            <button className="filter-btn" onClick={filterSolutions}>Filter Solutions</button>
           </div>
-          {solutions.length > 0 && (
+          {guesses.length > 0 && (
             <div className="solutions">
               <h2>Possible Solutions</h2>
-              <ul>
-                {solutions.map((word, i) => (
-                  <button key={i} value={word} onClick={handleSolutionClick}>{word}</button>
-                ))}
-              </ul>
+              {solutions.length === 0
+                ? <p className="no-solutions">No possible solutions found.</p>
+                : <ul>
+                    {solutions.map((word, i) => (
+                      <button key={i} className="solution-btn" value={word} onClick={handleSolutionClick}>{word}</button>
+                    ))}
+                  </ul>
+              }
             </div>
           )}
         </div>

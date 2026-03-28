@@ -10,8 +10,8 @@ function LetterTile({ letter, color }) {
   );
 }
 
-export default function WordGuess({ tiles, onTilesChange }) {
-  const [dialogOpen, setDialogOpen] = useState(false);
+export default function WordGuess({ tiles, onTilesChange, showDialog }) {
+  const [dialogOpen, setDialogOpen] = useState(showDialog);
 
   function handleSave(newTiles) {
     onTilesChange(newTiles);

@@ -25,6 +25,11 @@
   gap: 8px;
 }
 
+.dialog-tile.focused .dialog-letter {
+  outline: 3px solid #333;
+  outline-offset: 2px;
+}
+
 .dialog-letter {
   width: 48px;
   height: 48px;
