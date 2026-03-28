@@ -10,6 +10,9 @@
   align-items: center;
   justify-content: center;
   border: 2px solid #ccc;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
   border-radius: 4px;
   cursor: pointer;
   user-select: none;

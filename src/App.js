@@ -36,6 +36,16 @@ function App() {
     setSolutions(results);
   }
 
+  const handleSolutionClick = (e) =>
+  {
+    const {value} = e.target;
+    console.log(value);
+    const tiles = value.toUpperCase().split('').map(l => ({ letter: l, color: 'gray' }));
+    setGuesses(prev => [...prev, { id: nextId, tiles: tiles }]);
+    setNextId(prev => prev + 1);
+  }
+
+
   return (
     <div className="App">
       <h1>Wordle Solver</h1>
@@ -54,14 +64,16 @@ function App() {
             <button className="add-btn" onClick={addGuess}>+ Add Guess</button>
             <button className="filter-btn" onClick={filterSolutions}>Filter Solutions</button>
           </div>
-        </div>
-        <div className="solutions">
-          <h2>Possible Solutions</h2>
-          <ul>
-            {solutions.map((word, i) => (
-              <li key={i}>{word}</li>
-            ))}
-          </ul>
+          {solutions.length > 0 && (
+            <div className="solutions">
+              <h2>Possible Solutions</h2>
+              <ul>
+                {solutions.map((word, i) => (
+                  <button key={i} value={word} onClick={handleSolutionClick}>{word}</button>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>
