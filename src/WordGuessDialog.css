@@ -16,6 +16,7 @@
 .dialog-tiles {
   display: flex;
   gap: 10px;
+  justify-content: center;
 }
 
 .dialog-tile {
@@ -80,6 +81,35 @@
 
 .color-btn.active {
   border-color: #333;
+}
+
+.letter-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 16px;
+  align-items: center;
+}
+
+.letter-row {
+  display: flex;
+  gap: 4px;
+}
+
+.letter-key {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  font-family: courier;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.letter-key:hover {
+  background-color: #f0f0f0;
 }
 
 .dialog-actions {

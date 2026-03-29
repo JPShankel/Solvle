@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import './WordGuessDialog.css';
 
 const COLORS = ['gray', 'yellow', 'green'];
+const QWERTY = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'].map(r => r.split(''));
 
 export default function WordGuessDialog({ tiles, onSave, onClose }) {
   const dialogRef = useRef(null);
@@ -39,6 +40,11 @@ export default function WordGuessDialog({ tiles, onSave, onClose }) {
     updateDraft(index, { color: next });
   }
 
+  function handleLetterClick(letter) {
+    updateDraft(focusedIndex, { letter });
+    inputRefs.current[focusedIndex + 1]?.focus();
+  }
+
   function handleSave() {
     onSave(draft);
     onClose();
@@ -71,6 +77,15 @@ export default function WordGuessDialog({ tiles, onSave, onClose }) {
                 />
               ))}
             </div>
+          </div>
+        ))}
+      </div>
+      <div className="letter-selector">
+        {QWERTY.map((row, r) => (
+          <div key={r} className="letter-row">
+            {row.map(l => (
+              <button key={l} className="letter-key" onClick={() => handleLetterClick(l)}>{l}</button>
+            ))}
           </div>
         ))}
       </div>
