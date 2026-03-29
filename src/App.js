@@ -36,7 +36,7 @@ function App() {
     setSolutions(results);
   }
 
-  const cachedFilter = useCallback(filterSolutions,[guesses]);
+  const cachedFilter = useCallback(filterSolutions,[guesses,wordBank]);
 
   useEffect(()=>
   {
