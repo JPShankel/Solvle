@@ -1,7 +1,7 @@
 .App {
   padding: 24px;
   text-align: center;
-  font-family:'courier';
+  font-family:courier;
 }
 
 .solver {
@@ -59,6 +59,8 @@
   border-radius: 4px;
   border: 1px solid #ccc;
   background: none;
+  font-family:courier;
+  font-weight:bold;
 }
 
 .solution-btn:hover {
