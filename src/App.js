@@ -40,7 +40,7 @@ function App() {
   {
     filterSolutions();
   }
-  ,[guesses]);
+  ,[guesses,filterSolutions]);
 
   const handleSolutionClick = (e) =>
   {
