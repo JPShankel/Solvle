@@ -1,6 +1,7 @@
 .App {
   padding: 24px;
   text-align: center;
+  font-family:'courier';
 }
 
 .solver {

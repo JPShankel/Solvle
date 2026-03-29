@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import { useWordBank } from './WordBankContext';
 import WordGuess from './WordGuess';
@@ -36,11 +36,13 @@ function App() {
     setSolutions(results);
   }
 
+  const cachedFilter = useCallback(filterSolutions,[guesses]);
+
   useEffect(()=>
   {
-    filterSolutions();
+    cachedFilter();
   }
-  ,[guesses,filterSolutions]);
+  ,[cachedFilter]);
 
   const handleSolutionClick = (e) =>
   {
