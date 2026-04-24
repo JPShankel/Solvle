@@ -18,10 +18,14 @@ export default function WordGuessDialog({ tiles, onSave, onClose }) {
     setDraft(prev => prev.map((t, i) => i === index ? { ...t, ...patch } : t));
   }
 
+  function focusNextTile(index) {
+    inputRefs.current[index + 1]?.focus();
+  }
+
   function handleKeyDown(e, index) {
     if (/^[a-zA-Z]$/.test(e.key)) {
       updateDraft(index, { letter: e.key.toUpperCase() });
-      inputRefs.current[index + 1]?.focus();
+      focusNextTile(index);
       e.preventDefault();
     }
     if (e.key === 'Backspace') {
@@ -32,6 +36,18 @@ export default function WordGuessDialog({ tiles, onSave, onClose }) {
       }
       e.preventDefault();
     }
+  }
+
+  function handleInputChange(e, index) {
+    const letters = e.target.value.toUpperCase().match(/[A-Z]/g);
+
+    if (!letters) {
+      updateDraft(index, { letter: '' });
+      return;
+    }
+
+    updateDraft(index, { letter: letters[letters.length - 1] });
+    focusNextTile(index);
   }
 
   function cycleColor(index) {
@@ -59,10 +75,15 @@ export default function WordGuessDialog({ tiles, onSave, onClose }) {
             <div className={`dialog-letter ${tile.color}`} onClick={() => cycleColor(i)}>
               <input
                 ref={el => inputRefs.current[i] = el}
-                maxLength={1}
+                type="text"
+                inputMode="text"
+                autoCapitalize="characters"
+                autoComplete="off"
+                spellCheck={false}
+                aria-label={`Letter ${i + 1}`}
                 value={tile.letter}
                 onKeyDown={e => handleKeyDown(e, i)}
-                onChange={() => {}}
+                onChange={e => handleInputChange(e, i)}
                 onClick={e => e.stopPropagation()}
                 onFocus={() => setFocusedIndex(i)}
                 autoFocus={i === 0}
