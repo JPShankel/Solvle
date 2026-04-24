@@ -1,10 +1,61 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import { useWordBank } from './WordBankContext';
 import WordGuess from './WordGuess';
 import { matchesGuess } from './wordMatcher';
 
 const EMPTY_TILES = () => Array.from({ length: 5 }, () => ({ letter: '', color: 'gray' }));
+const SOLUTION_ROW_HEIGHT = 38;
+const SOLUTION_LIST_HEIGHT = 320;
+const SOLUTION_OVERSCAN = 5;
+
+function VirtualizedSolutions({ solutions, onSolutionClick }) {
+  const [scrollTop, setScrollTop] = useState(0);
+  const scrollRef = useRef(null);
+  const visibleCount = Math.ceil(SOLUTION_LIST_HEIGHT / SOLUTION_ROW_HEIGHT);
+  const startIndex = Math.max(0, Math.floor(scrollTop / SOLUTION_ROW_HEIGHT) - SOLUTION_OVERSCAN);
+  const endIndex = Math.min(
+    solutions.length,
+    startIndex + visibleCount + SOLUTION_OVERSCAN * 2
+  );
+  const visibleSolutions = solutions.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    setScrollTop(0);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [solutions]);
+
+  return (
+    <div
+      ref={scrollRef}
+      className="solutions-scroll"
+      onScroll={e => setScrollTop(e.currentTarget.scrollTop)}
+    >
+      <div
+        className="solutions-spacer"
+        style={{ height: solutions.length * SOLUTION_ROW_HEIGHT }}
+      >
+        {visibleSolutions.map((word, i) => {
+          const index = startIndex + i;
+
+          return (
+            <button
+              key={word}
+              className="solution-btn"
+              style={{ transform: `translateY(${index * SOLUTION_ROW_HEIGHT}px)` }}
+              value={word}
+              onClick={onSolutionClick}
+            >
+              {word}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const wordBank = useWordBank();
@@ -30,7 +81,6 @@ function App() {
     for (const word of wordBank) {
       if (guesses.every(g => matchesGuess(g.tiles, word))) {
         results.push(word);
-        if (results.length === 10) break;
       }
     }
     setSolutions(results);
@@ -46,7 +96,7 @@ function App() {
 
   const handleSolutionClick = (e) =>
   {
-    const {value} = e.target;
+    const {value} = e.currentTarget;
     console.log(value);
     const tiles = value.toUpperCase().split('').map(l => ({ letter: l, color: 'gray' }));
     setGuesses(prev => [...prev, { id: nextId, tiles: tiles }]);
@@ -77,13 +127,10 @@ function App() {
           {guesses.length > 0 && (
             <div className="solutions">
               <h2>Possible Solutions</h2>
+              <p className="solution-count">{solutions.length} suggestions</p>
               {solutions.length === 0
                 ? <p className="no-solutions">No possible solutions found.</p>
-                : <ul>
-                    {solutions.map((word, i) => (
-                      <button key={i} className="solution-btn" value={word} onClick={handleSolutionClick}>{word}</button>
-                    ))}
-                  </ul>
+                : <VirtualizedSolutions solutions={solutions} onSolutionClick={handleSolutionClick} />
               }
             </div>
           )}
