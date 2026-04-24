@@ -100,6 +100,14 @@ describe('matchesGuess', () => {
   });
 
   describe('mixed colors', () => {
+    test('requires multiple copies when one repeated letter is yellow and one is green', () => {
+      const t = tiles('sleep', ['gray', 'gray', 'yellow', 'green', 'gray']);
+
+      expect(matchesGuess(t, 'after')).toBe(false);
+      expect(matchesGuess(t, 'abbey')).toBe(false);
+      expect(matchesGuess(t, 'tenet')).toBe(true);
+    });
+
     test('fails when a yellow is in exact place', () => {
       // C is green at 0, R is yellow (appears somewhere), rest gray
       expect(matchesGuess(tiles('crane', ['green', 'yellow', 'gray', 'gray', 'gray']), 'crimp')).toBe(false);
